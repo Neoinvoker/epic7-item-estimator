@@ -13,11 +13,9 @@
    
 3. 请安装Tesseract OCR
 
-   对于熟练的编程人员，您可以选择编译Tesseract源代码：访问 [Tesseract OCR 的官方 GitHub 仓库：](https://github.com/tesseract-ocr/tesseract/releases/tag/5.3.2)
+   *对于熟练的编程人员，您可以选择编译Tesseract源代码：访问 [Tesseract OCR 的官方 GitHub 仓库：](https://github.com/tesseract-ocr/tesseract/releases/tag/5.3.2)*
    
-   **推荐**
-   
-   或者您可以选择访问[Tesseract at UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki) 下载并安装Tesseract OCR
+   **推荐方式**    或者您可以选择访问[Tesseract at UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki) 下载并安装Tesseract OCR
    
    **由于国内下载巨慢，所以我直接在release中打包了这个安装包**
    
