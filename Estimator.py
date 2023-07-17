@@ -1,10 +1,18 @@
 import cv2
 from PIL import Image, ImageFilter
 from adbutils import AdbDevice
-
 from Item import Item
 from ADBManager import ADBManager
 from ImageUtils import ImgUtils
+
+
+class WrongItemException(Exception):
+    def __init__(self, e):
+        super().__init__(self)
+        self.e = e
+
+    def __str__(self):
+        return self.e
 
 
 class Estimator:
@@ -58,13 +66,16 @@ class Estimator:
                 ("英雄项链", "./resource/img/purple_amulet.png"), ("英雄戒指", "./resource/img/purple_ring.png"),
                 ("英雄头盔", "./resource/img/purple_helmet.png"), ("英雄鞋子", "./resource/img/purple_boots.png"),
                 ("英雄护甲", "./resource/img/purple_armor.png"), ("英雄武器", "./resource/img/purple_weapon.png")]
+        flag = False
         for it in path:
             img = ImgUtils.readImg(it[1])
             result = ImgUtils.check(self.screenshot, img)
             if result:
+                flag = True
                 item_type = it[0]
                 break
-
+        if not flag:
+            raise WrongItemException("未识别到英雄/传说装备")
         # 紫左三
         level = 0
         sub_attribute: [[str, str]] = []
@@ -84,8 +95,11 @@ class Estimator:
 
         score = int(self.readPicture(self.pos[i + 1][0], self.pos[i + 1][1]))
         set_type = self.readPicture(self.pos[i + 2][0], self.pos[i + 2][1])
-
-        level = int(self.readPicture((445, 100), (500, 135), 180).replace("+", ""))
+        lvl = self.readPicture((445, 100), (500, 135), 180).replace("+", "")
+        if '+' in lvl:
+            level = int(lvl)
+        else:
+            level = 0
         # 等级的识别 二值化阈值设为180（等级区域的颜色为橙色）
 
         item = Item(item_type, level, score, main_attribute, sub_attribute, set_type)
@@ -188,6 +202,8 @@ class Estimator:
                                 return self.result[5]
                         else:
                             return self.result[1]
+                else:
+                    return self.result[4]
             else:
                 if item.score < 52:
                     for pair in item.sub_attribute:
@@ -213,4 +229,3 @@ class Estimator:
                             return self.result[2]
                 else:
                     return self.result[3]
-

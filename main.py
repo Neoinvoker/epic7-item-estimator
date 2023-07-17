@@ -1,12 +1,5 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QApplication
-
-from adbutils import adb, AdbDevice, errors
-from numpy import asarray
-
-import random
 import sys
-from ADBManager import ADBManager
 from GUI import MainWindow
 
 

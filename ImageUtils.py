@@ -1,8 +1,6 @@
 import aircv
 from adbutils import AdbDevice
 import pytesseract
-import easyocr
-from PIL import Image
 
 
 class ImgUtils:
@@ -26,7 +24,3 @@ class ImgUtils:
     @staticmethod
     def img2num(img):
         return pytesseract.image_to_data(img)
-
-    @staticmethod
-    def img2str_ezorc(img):
-        return easyocr.Reader(['ch_sim']).readtext(img)

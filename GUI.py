@@ -1,12 +1,10 @@
-import sys
-from adbutils import adb, AdbDevice, errors
+from adbutils import errors
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QLabel, QComboBox, QLineEdit, QTextEdit, QPushButton, \
-    QVBoxLayout, QHBoxLayout, QFormLayout
+from PyQt6.QtWidgets import QMainWindow, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout
 
-from Estimator import Estimator
+from Estimator import Estimator, WrongItemException
 
 
 class E7ItemEstimator(QWidget):
@@ -102,22 +100,24 @@ class E7ItemEstimator(QWidget):
             self.adb_connected = True
         except errors.AdbError as e:
             self.adb_connected = False
-            print(e)
             self.emitLog.emit(str(e))
 
         if self.adb_connected:
             QtWidgets.QMessageBox.information(self, "连接成功", "ADB 连接成功！")
+            self.emitLog.emit("ADB 连接成功！")
         else:
-            QtWidgets.QMessageBox.warning(self, "连接失败", "ADB 连接失败！")
+            QtWidgets.QMessageBox.warning(self, "连接失败", "ADB 连接失败！ 请重试！")
+            self.emitLog.emit("ADB 连接失败！ 请重试！")
 
     def update_ui(self):
         if not self.adb_connected:
             QtWidgets.QMessageBox.information(self, "警告", "请先连接ADB！")
             return
         # 获取item对象
-        item = self.estimator.getItem()
-        if not ("英雄" in item.item_type or "传说" in item.item_type):
-            self.emitLog.emit("未检测到传说或英雄装备")
+        try:
+            item = self.estimator.getItem()
+        except WrongItemException as e:
+            self.emitLog.emit(str(e))
             return
         result = self.estimator.estimate(item)
         # 更新UI界面中的各个控件内容
@@ -125,13 +125,9 @@ class E7ItemEstimator(QWidget):
         self.level.setText(str(item.level))
         self.main_attribute.setText(item.main_attribute[0])
         self.main_attribute_value.setText(str(item.main_attribute[1]))
-        for i in range(4):
-            if item.sub_attribute[i]:
-                self.sub_attribute[i].setText(item.sub_attribute[i][0])
-                self.sub_attribute_value[i].setText(str(item.sub_attribute[i][1]))
-            else:
-                self.sub_attribute[i].setText("无")
-                self.sub_attribute_value[i].setText("")
+        for i in range(len(item.sub_attribute)):
+            self.sub_attribute[i].setText(item.sub_attribute[i][0])
+            self.sub_attribute_value[i].setText(str(item.sub_attribute[i][1]))
         self.score.setText(str(item.score))
         self.set_type.setText(item.set_type)
         self.evaluation.setText(result)

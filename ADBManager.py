@@ -1,5 +1,5 @@
-from adbutils import adb, AdbDevice, errors
-from PyQt6 import QtCore, QtGui, QtWidgets
+from adbutils import adb, errors
+from PyQt6 import QtCore
 
 
 class ADBManager(QtCore.QThread):
@@ -12,7 +12,6 @@ class ADBManager(QtCore.QThread):
             QtCore.QThread.sleep(1)
             adb.connect(self.adb_address, timeout=10)
             device = adb.device(serial=self.adb_address)
-            print(device.info)
             QtCore.QThread.sleep(1)
             return device
 
