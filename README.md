@@ -30,6 +30,8 @@
    
    在该目录下的tessdata中拷贝本项目中的 **E7.traineddata** 这个文件是我训练的用于识别第七史诗游戏内字体的OCR模型
 
+   **请将项目根目录下的tesseract_path.txt文件中的路径设置为您的安装路径！例如：C:\Program Files\Tesseract-OCR\tesseract.exe**
+
    如果您是OCR相关的工作者或对于OCR有一定的了解，欢迎各位改进或提供更优秀的模型
    
 5. 在项目根目录下执行 py ./main.py 即可运行
