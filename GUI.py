@@ -1,3 +1,6 @@
+import os
+
+import pytesseract
 from adbutils import errors
 from PyQt6 import QtWidgets
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -94,6 +97,14 @@ class E7ItemEstimator(QWidget):
         self.setLayout(main_layout)
 
     def connect_adb(self):
+        # 读取 Tesseract 路径
+        tesseract_path_file = os.path.join(os.getcwd(), "tesseract_path.txt")
+        with open(tesseract_path_file, "r") as f:
+            tesseract_path = f.read().strip()
+
+        # 设置 Tesseract 路径
+        pytesseract.pytesseract.tesseract_cmd = tesseract_path
+
         adb_port = self.adb_port.text()
         try:
             self.estimator = Estimator(adb_port)
@@ -140,5 +151,5 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setCentralWidget(E7ItemEstimator())
-        self.setWindowTitle("第七史诗装备强化计算器 测试版")
+        self.setWindowTitle("第七史诗装备强化计算器 v0.1-alpha")
         self.setWindowIcon(QIcon('./resource/img/main.ico'))

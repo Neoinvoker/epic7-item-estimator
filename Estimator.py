@@ -52,7 +52,10 @@ class Estimator:
         cv2.imwrite(f'cropped_image.png', cropped_image)
         cropped_image = Image.open(f'cropped_image.png').convert('L')
         img = cropped_image.point(lambda x: 0 if x > threshold else 255, '1').filter(ImageFilter.EDGE_ENHANCE_MORE)
-        text = ImgUtils.img2str(img)
+        try:
+            text = ImgUtils.img2str(img)
+        except BaseException as e:
+            raise e
         return text.replace('\f', '')
 
     def getItem(self):
